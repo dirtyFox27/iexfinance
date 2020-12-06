@@ -55,3 +55,28 @@ class IEXSymbols(ReferenceData):
     @property
     def endpoint(self):
         return "iex/symbols"
+
+
+class Exchanges(ReferenceData):
+    @property
+    def endpoint(self):
+        return "exchanges"
+
+class InternationalSymbols(ReferenceData):
+    def __init__(self, exchange, region, **kwargs):
+        self.exchange = exchange
+        self.region = region
+        super(InternationalSymbols, self).__init__(**kwargs)
+
+    @property
+    def url(self):
+        if self.exchange is not None:
+            return "/ref-data/exchange/%s/symbols" % self.exchange
+        elif self.region is not None:
+            return "/ref-data/region/%s/symbols" % self.region
+
+    def fetch(self):
+        return super(InternationalSymbols, self).fetch()
+
+    def _convert_output(self, out):
+        return pd.DataFrame(out, index=[out["symbol"]])
