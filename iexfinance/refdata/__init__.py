@@ -1,4 +1,4 @@
-from iexfinance.refdata.base import Symbols, IEXSymbols, TradingDatesReader
+from iexfinance.refdata.base import Symbols, IEXSymbols, TradingDatesReader, Exchanges, InternationalSymbols
 
 
 def get_symbols(**kwargs):
@@ -49,3 +49,26 @@ def get_us_trading_dates_holidays(type_, direction, last=1, startDate=None, **kw
     return TradingDatesReader(
         type_, direction, last=last, startDate=startDate, **kwargs
     ).fetch()
+
+def get_exchanges(**kwargs):
+    """
+    Returns array of all international exchanges that 
+    IEX Cloud supports for API calls
+    Reference: https://iexcloud.io/docs/api/#symbols
+    Data Weighting: ``1`` per call
+    """
+    return Exchanges(**kwargs).fetch()
+
+
+def get_international_symbols(exchange, **kwargs):
+    """
+    International Symbols
+    This endpoint provides international symbols for an exchange
+    Reference: https://iexcloud.io/docs/api/#international-symbols
+    Data Weighting: ``100`` per symbol
+    Parameters
+    ----------
+    exchange: str
+        A single exchange for retrieval
+    """
+    return InternationalSymbols(exchange, **kwargs).fetch()
